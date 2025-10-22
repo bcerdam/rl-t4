@@ -1,6 +1,28 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import csv
+
+
+def update_statistical_parameters(mean_lw, std_lw, actor_lr, error, gaussian_action, mean, std, observation_features):
+    mean_lw = mean_lw + actor_lr * error * (gaussian_action - mean) / (std ** 2) * observation_features
+    std_lw = std_lw + actor_lr * error * (((gaussian_action - mean) ** 2) / (std ** 2) - 1) * observation_features
+    return mean_lw, std_lw
+
+
+def plot_single_result(all_runs_lengths, n_episodes):
+    mean_lengths_over_runs = np.mean(all_runs_lengths, axis=0)
+    grouped_means = np.mean(mean_lengths_over_runs.reshape(-1, 10), axis=1)
+    x_axis = np.arange(10, n_episodes + 1, 10)
+    plt.figure(figsize=(12, 8))
+    plt.plot(x_axis, grouped_means, label="Actor-Critic con aprox. lineal")
+    plt.xlabel("Episodio")
+    plt.ylabel(f"Largo Promedio de Episodio ")
+    plt.title("Actor-Critic con aproximacion lineal: MountainCarContinuous-v0")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("figuras/c_actor_critic.jpeg", dpi=500)
 
 
 def e_greedy_policy(observation, weights, feature_extractor, epsilon, possible_actions):
