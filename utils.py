@@ -74,7 +74,7 @@ def plot_single_result(all_runs_lengths, n_episodes):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig("figuras/c_actor_critic.jpeg", dpi=500)
+    # plt.savefig("figuras/c_actor_critic.jpeg", dpi=500)
 
 
 def e_greedy_policy(observation, weights, feature_extractor, epsilon, possible_actions):
@@ -102,5 +102,5 @@ def plot_comparison_results(sarsa_lengths, q_learning_lengths, n_episodes):
     plt.grid(True)
     plt.ylim(bottom=100)
     plt.tight_layout()
-    plt.savefig("figuras/pregunta_a_sarsa_vs_qlearning.jpeg", dpi=500)
+    # plt.savefig("figuras/pregunta_a_sarsa_vs_qlearning.jpeg", dpi=500)
     plt.show()

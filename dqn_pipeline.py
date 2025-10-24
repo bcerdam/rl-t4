@@ -8,7 +8,7 @@ from stable_baselines3.common.monitor import Monitor
 from utils import plot_sb3_results
 
 env_name = "MountainCar-v0"
-N_RUNS = 1
+N_RUNS = 30
 N_TIMESTEPS = 300000
 dqn_results_dir = "dqn_results"
 

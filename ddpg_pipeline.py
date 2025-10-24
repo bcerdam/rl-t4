@@ -9,7 +9,7 @@ from stable_baselines3.common.noise import OrnsteinUhlenbeckActionNoise
 from utils import plot_sb3_results
 
 env_name = "MountainCarContinuous-v0"
-N_RUNS = 1
+N_RUNS = 10
 N_TIMESTEPS = 300000
 ddpg_results_dir = "ddpg_results"
 
