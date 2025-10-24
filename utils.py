@@ -1,8 +1,61 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import os
 import csv
 
+
+def plot_sb3_results(log_dir, num_runs, n_episodes, algorithm_name, env_name, plot_filename_base):
+    all_runs_lengths_array = np.zeros((num_runs, n_episodes))
+    all_runs_rewards_array = np.zeros((num_runs, n_episodes))
+
+    for i in range(num_runs):
+        file_path = os.path.join(log_dir, f"run_{i}", "monitor.csv")
+        df = pd.read_csv(file_path, skiprows=1)
+
+        run_lengths = df['l'].to_numpy()
+        run_rewards = df['r'].to_numpy()
+
+        num_eps_in_run = len(run_lengths)
+
+        if num_eps_in_run >= n_episodes:
+            all_runs_lengths_array[i, :] = run_lengths[:n_episodes]
+            all_runs_rewards_array[i, :] = run_rewards[:n_episodes]
+        else:
+            all_runs_lengths_array[i, :num_eps_in_run] = run_lengths
+            all_runs_lengths_array[i, num_eps_in_run:] = run_lengths[-1]
+
+            all_runs_rewards_array[i, :num_eps_in_run] = run_rewards
+            all_runs_rewards_array[i, num_eps_in_run:] = run_rewards[-1]
+
+    mean_lengths_over_runs = np.mean(all_runs_lengths_array, axis=0)
+    grouped_mean_lengths = np.mean(mean_lengths_over_runs.reshape(-1, 10), axis=1)
+
+    mean_rewards_over_runs = np.mean(all_runs_rewards_array, axis=0)
+    grouped_mean_rewards = np.mean(mean_rewards_over_runs.reshape(-1, 10), axis=1)
+
+    x_axis = np.arange(10, n_episodes + 1, 10)
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
+
+    ax1.plot(x_axis, grouped_mean_lengths, label=f"{algorithm_name} (Stable Baselines)")
+    ax1.set_ylabel(f"Largo Promedio de Episodio")
+    ax1.set_title(f" {algorithm_name} en {env_name}")
+    ax1.legend()
+    ax1.grid(True)
+
+    ax2.plot(x_axis, grouped_mean_rewards, label=f"{algorithm_name} (Stable Baselines)", color='orange')
+    ax2.set_xlabel("Episodios")
+    ax2.set_ylabel(f"Recompensa Promedio de Episodio")
+    ax2.legend()
+    ax2.grid(True)
+
+    os.makedirs("figuras", exist_ok=True)
+    plot_filename = f"figuras/{plot_filename_base}.jpeg"
+
+    plt.tight_layout()
+    plt.savefig(plot_filename, dpi=500, format='jpeg')
+    print(f"Plot saved to {plot_filename}")
 
 def update_statistical_parameters(mean_lw, std_lw, actor_lr, error, gaussian_action, mean, std, observation_features):
     mean_lw = mean_lw + actor_lr * error * (gaussian_action - mean) / (std ** 2) * observation_features
