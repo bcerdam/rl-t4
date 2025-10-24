@@ -4,7 +4,6 @@ import pandas as pd
 import os
 import csv
 
-
 def plot_sb3_results(log_dir, num_runs, n_episodes, algorithm_name, env_name, plot_filename_base):
     all_runs_lengths_array = np.zeros((num_runs, n_episodes))
     all_runs_rewards_array = np.zeros((num_runs, n_episodes))
