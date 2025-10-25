@@ -27,8 +27,6 @@ if __name__ == '__main__':
         "target_update_interval": 50,
         "train_freq": 32,
         "gradient_steps": 16,
-        "exploration_fraction": 0.1,
-        "exploration_final_eps": 0.05,
         "policy_kwargs": {"net_arch": [128, 128]}
     }
 
